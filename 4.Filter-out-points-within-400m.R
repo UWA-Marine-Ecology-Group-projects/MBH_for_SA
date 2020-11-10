@@ -31,6 +31,9 @@ llcrs <- proj4string(ip)
 b <- raster(paste(s.dir, "bathy-for-mbh-SA2.tif", sep='/'))
 plot(b)
 
+s <- raster(paste(s.dir, "slope-for-mbh-SA2.tif", sep='/'))
+plot(s)
+
 ## read the spatial points created with MBH ----
 
 p1 <- readOGR(paste(o.dir, "SA-bruvs-design-1.shp", sep='/')) # 96 features
@@ -101,7 +104,7 @@ mp <- readOGR(paste(s.dir, "SA-mp.shp", sep='/'))
 # https://gis.stackexchange.com/questions/102796/remove-points-within-x-distance
 
 ## p1 ----
-p1_matrix <- gWithinDistance(p1u, dist = 400, byid = TRUE)
+p1_matrix <- gWithinDistance(p1u, dist = 500, byid = TRUE)
 diag(p1_matrix) <- NA
 p1_matrix
 
@@ -171,7 +174,7 @@ v2 <- colSums(p2_matrix, na.rm=TRUE) == 0
 p2u[v2, ] # 14 features left
 
 ## Save points of design ---
-swbruvs <- p2u[v1, ]
+swbruvs <- p2u[v2, ]
 swbruvs
 
 swbruvs <- spTransform(swbruvs, llcrs)
@@ -220,7 +223,7 @@ v3 <- colSums(p3_matrix, na.rm=TRUE) == 0
 p3[v3, ] # 15 features left
 
 ## Save points of design ---
-swbruvs <- p3u[v1, ]
+swbruvs <- p3u[v3, ]
 swbruvs
 
 swbruvs <- spTransform(swbruvs, llcrs)
@@ -252,7 +255,7 @@ dev.off()
 
 
 ## p4 ----
-p4_matrix <- gWithinDistance(p4, dist = 400, byid = TRUE)
+p4_matrix <- gWithinDistance(p4u, dist = 400, byid = TRUE)
 diag(p4_matrix) <- NA
 p4_matrix
 
@@ -266,7 +269,11 @@ v4 <- colSums(p4_matrix, na.rm=TRUE) == 0
 p4[v4, ] # 12 features left
 
 ## Save points of design ---
-swbruvs <- p4[v1, ]
+swbruvs <- p4u[v4, ]
+swbruvs
+
+swbruvs <- spTransform(swbruvs, llcrs)
+swbruvs
 
 # save ----
 
@@ -293,7 +300,7 @@ dev.off()
 
 
 ## p5 ----
-p5_matrix <- gWithinDistance(p5, dist = 400, byid = TRUE)
+p5_matrix <- gWithinDistance(p5u, dist = 400, byid = TRUE)
 diag(p5_matrix) <- NA
 p5_matrix
 
@@ -304,10 +311,14 @@ p5_matrix
 
 colSums(p5_matrix, na.rm=TRUE) == 0
 v5 <- colSums(p5_matrix, na.rm=TRUE) == 0
-p5[v5, ] # 15 features left
+p5u[v5, ] # 15 features left
 
 ## Save points of design ---
-swbruvs <- p5[v1, ]
+swbruvs <- p5u[v5, ]
+swbruvs
+
+swbruvs <- spTransform(swbruvs, llcrs)
+swbruvs
 
 # save ----
 
@@ -334,7 +345,7 @@ dev.off()
 
 
 ## p6 ----
-p6_matrix <- gWithinDistance(p6, dist = 400, byid = TRUE)
+p6_matrix <- gWithinDistance(p6u, dist = 400, byid = TRUE)
 diag(p6_matrix) <- NA
 p6_matrix
 
@@ -345,10 +356,14 @@ p6_matrix
 
 colSums(p6_matrix, na.rm=TRUE) == 0
 v6 <- colSums(p6_matrix, na.rm=TRUE) == 0
-p6[v6, ] # 13 features left
+p6u[v6, ] # 13 features left
 
 ## Save points of design ---
-swbruvs <- p6[v1, ]
+swbruvs <- p6u[v6, ]
+swbruvs
+
+swbruvs <- spTransform(swbruvs, llcrs)
+swbruvs
 
 # save ----
 
@@ -375,7 +390,7 @@ dev.off()
 
 
 ## p7 ----
-p7_matrix <- gWithinDistance(p7, dist = 400, byid = TRUE)
+p7_matrix <- gWithinDistance(p7u, dist = 400, byid = TRUE)
 diag(p7_matrix) <- NA
 p7_matrix
 
@@ -386,10 +401,14 @@ p7_matrix
 
 colSums(p7_matrix, na.rm=TRUE) == 0
 v7 <- colSums(p7_matrix, na.rm=TRUE) == 0
-p7[v7, ] # 12 features left
+p7u[v7, ] # 12 features left
 
 ## Save points of design ---
-swbruvs <- p7[v1, ]
+swbruvs <- p7u[v7, ]
+swbruvs
+
+swbruvs <- spTransform(swbruvs, llcrs)
+swbruvs
 
 # save ----
 
@@ -416,7 +435,29 @@ dev.off()
 
 
 
+## Plot slope ----
 
+f.dir <- paste(o.dir,'filtered', sep='/')
+pdf(paste(f.dir,  paste("Slope", "pdf", sep='.'), sep='/'), height=7, width=8)
+plot(s, main ="Slope", col = rev(brewer.pal(20, "RdYlBu")))
+plot(mp, add=T)
+#points(swbruvs, pch=21, cex = 0.9, bg='white')
+#points(c7, pch=21, cex=1.5, bg = 'black')
+#plot(swnp, add=T)
+#points(wp, add = T, pch=20, cex = 0.7, col='green')
+dev.off()
+
+## Plot bathy ----
+
+f.dir <- paste(o.dir,'filtered', sep='/')
+pdf(paste(f.dir,  paste("Bathy", "pdf", sep='.'), sep='/'), height=7, width=8)
+plot(b, main ="Bathymetry", col = rev(brewer.pal(20, "RdYlBu")))
+plot(mp, add=T)
+#points(swbruvs, pch=21, cex = 0.9, bg='white')
+#points(c7, pch=21, cex=1.5, bg = 'black')
+#plot(swnp, add=T)
+#points(wp, add = T, pch=20, cex = 0.7, col='green')
+dev.off()
 
 
 
