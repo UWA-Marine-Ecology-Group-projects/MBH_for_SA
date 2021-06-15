@@ -19,8 +19,8 @@ d.dir <- paste(w.dir, "data", sep ='/')
 #read in data
 
 SWDat <- readRDS( "SWData_forSA.RDS")
-sa_rasters <- readRDS("SARasters.RDS")
-zones <- readRDS( "SAZones.RDS")
+sa_rasters <- readRDS(paste(d.dir, "SARasters.RDS", sep='/'))
+zones <- readRDS(paste(d.dir, "SAZones.RDS", sep='/'))
 
 # SW marine park polygon ----
 mp <- readOGR(paste(s.dir, "SA-mp.shp", sep='/'))
@@ -57,12 +57,12 @@ Bathy.targetProps <-  Bathy.targetNums / sum( Bathy.targetNums) # 0.5 0.5
 
 # Proportion of potential sites in each zone ----
 
-SWDat_small <- SWDat[!is.na( SWDat$Slope),]
-tmp <- colSums( SWDat_small[,c("StateMP", "AMP")], na.rm=TRUE)  # so similar amount of coordinates in each zone     
-tmp[1] # 1710 
-tmp[2] # 1950 
-props <- tmp / nrow( SWDat_small) # state 0.4672131 - common w 0.5327869 
-props <- props / sum( props) # state 0.4672131 - common w 0.5327869
+# SWDat_small <- SWDat[!is.na( SWDat$Slope),]
+# tmp <- colSums( SWDat_small[,c("StateMP", "AMP")], na.rm=TRUE)  # so similar amount of coordinates in each zone     
+# tmp[1] # 1710 
+# tmp[2] # 1950 
+# props <- tmp / nrow( SWDat_small) # state 0.4672131 - common w 0.5327869 
+# props <- props / sum( props) # state 0.4672131 - common w 0.5327869
 
 
 ###################################
@@ -70,6 +70,7 @@ props <- props / sum( props) # state 0.4672131 - common w 0.5327869
 ###################################
 
 catS <- cut( sa_rasters$slope, breaks=Slope.cuts, na.rm=TRUE)
+plot(catS)
 
 plot( zones$state); plot( catS, add=TRUE); plot( zones$commonw, add=TRUE)
 #plot(mp, add=T)
